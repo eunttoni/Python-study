@@ -128,6 +128,7 @@
             placeholder="name"
             aria-label="name"
             aria-describedby="basic-addon1"
+            id="userName"
           />
         </div>
 
@@ -138,7 +139,7 @@
             >
           </div>
           <select class="custom-select" id="inputGroupSelect01">
-            <option selected>--수량을 선택하세요--</option>
+            <option value="" selected>--수량을 선택하세요--</option>
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
@@ -149,7 +150,7 @@
 
         <div class="input-group mb-3">
           <div class="input-group-prepend">
-            <span class="input-group-text" id="basic-addon1">주소</span>
+            <span class="input-group-text" id="basic-addon2">주소</span>
           </div>
           <input
             type="text"
@@ -157,23 +158,27 @@
             placeholder="address"
             aria-label="address"
             aria-describedby="basic-addon2"
+            id="address"
           />
         </div>
 
         <div class="input-group mb-3">
           <div class="input-group-prepend">
-            <span class="input-group-text" id="basic-addon1">전화번호</span>
+            <span class="input-group-text" id="basic-addon3">전화번호</span>
           </div>
           <input
             type="text"
             class="form-control"
-            placeholder="phone"
+            placeholder="숫자만 입력해주세요"
             aria-label="phone"
             aria-describedby="basic-addon3"
+            id="phone"
           />
         </div>
 
-        <button class="btn btn-primary" type="submit">주문하기</button>
+        <button class="btn btn-primary" type="submit" onclick="checkForm()">
+          주문하기
+        </button>
       </div>
     </div>
     <!-- Optional JavaScript -->
@@ -193,5 +198,31 @@
       integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
       crossorigin="anonymous"
     ></script>
+
+    <script>
+      $("#phone").keyup(function(e) {
+        var regexp = /^[0-9]*$/;
+        v = $(this).val();
+
+        if (!regexp.test(v)) {
+          alert("숫자만 입력하세요");
+          $(this).val("");
+        }
+      });
+
+      function checkForm() {
+        if ($("#userName").val() == "") {
+          alert("이름을 입력해주세요");
+        } else if ($("#inputGroupSelect01").val() == "") {
+          alert("수량을 선택해주세요");
+        } else if ($("#address").val() == "") {
+          alert("주소를 입력해주세요");
+        } else if ($("#phone").val() == "") {
+          alert("번호를 입력해주세요");
+        } else {
+          confirm("주문하시겠습니까?");
+        }
+      }
+    </script>
   </body>
 </html>
