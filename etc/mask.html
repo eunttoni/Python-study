@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <h1>공적 마스크 판매 현황</h1>
+    <nav aria-label="...">
+      <ul class="pagination pagination-sm">
+        <li class="page-item active" aria-current="page">
+          <span class="page-link">
+            1
+            <span class="sr-only">(current)</span>
+          </span>
+        </li>
+        <li class="page-item">
+          <a class="page-link" href="#" onclick="page(2)">2</a>
+        </li>
+        <li class="page-item">
+          <a class="page-link" href="#" onclick="page(3)">3</a>
+        </li>
+      </ul>
+    </nav>
+
+    <ul id="storeList">
+      <li>약국이름1</li>
+      <!-- 여기에 입고시간도 보여주고 싶은데.... 
+            ajax 2번 호출해야하고 고유번호로 비교해서 가져와야 할 거 같다. -->
+    </ul>
+
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+      integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+      integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+      integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.min.js"
+      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      // 클릭했을 때 페이징 클릭했을 때 active 클래스 추가도 하고시푼뎀
+      function page(value) {
+        $.ajax({
+          type: "GET",
+          url:
+            "https://8oi9s0nnth.apigw.ntruss.com/corona19-masks/v1/stores/json",
+          data: {
+            page: value,
+            perPage: 600
+          },
+          success: function(res) {
+            let size = res.storeInfos.length;
+            $("#storeList").html("");
+            for (i = 0; i < size; i++) {
+              if (res.storeInfos[i].type == "01") {
+                let name = res.storeInfos[i].name;
+                $("#storeList").append(`<li> ${name} </li>`);
+                // ES6 기능 ``에 ${} 쓰고 + 로 연결 안해줘도 됨
+                //console.log(res.storeInfos[i].name);
+              }
+            }
+          }
+        });
+      }
+
+      page(1);
+    </script>
+  </body>
+</html>
