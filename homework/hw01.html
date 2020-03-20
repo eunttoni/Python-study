@@ -169,7 +169,7 @@
           <input
             type="text"
             class="form-control"
-            placeholder="숫자만 입력해주세요"
+            placeholder="010-****-****"
             aria-label="phone"
             aria-describedby="basic-addon3"
             id="phone"
@@ -200,25 +200,26 @@
     ></script>
 
     <script>
-      $("#phone").keyup(function(e) {
-        var regexp = /^[0-9]*$/;
-        v = $(this).val();
-
-        if (!regexp.test(v)) {
-          alert("숫자만 입력하세요");
-          $(this).val("");
-        }
-      });
+      // 핸드폰 번호 체크 정규식
+      function isCelluar(asValue) {
+        var regExp = /^01(?:0|1|[6-9])-(?:\d{3}|\d{4})-\d{4}$/;
+        return regExp.test(asValue); // 형식에 맞는 경우 true 리턴
+      }
 
       function checkForm() {
         if ($("#userName").val() == "") {
           alert("이름을 입력해주세요");
+          $("#userName").focus();
         } else if ($("#inputGroupSelect01").val() == "") {
           alert("수량을 선택해주세요");
+          $("#inputGroupSelect01").focus();
         } else if ($("#address").val() == "") {
           alert("주소를 입력해주세요");
-        } else if ($("#phone").val() == "") {
-          alert("번호를 입력해주세요");
+          $("#address").focus();
+        } else if (!isCelluar($("#phone").val())) {
+          alert("전화번호를 다시 입력 해주세요");
+          $("#phone").val("");
+          $("#phone").focus();
         } else {
           confirm("주문하시겠습니까?");
         }
