@@ -53,7 +53,35 @@
           return;
         }
 
-        // 여기에 코드를 입력하세요
+        $.ajax({
+          type: "GET",
+          url: "https://newsapi.org/v2/everything",
+          data: { q: keyword, apiKey: "5d6c1a1d4c0d4de1a60bc34087bb8655" },
+          success: onSuccess
+        });
+      }
+
+      function onSuccess(res) {
+        let size = res.articles.length;
+        // console.log(size);
+
+        $("#news").html("");
+        for (i = 0; i < size; i++) {
+          $("#news").append(
+            `<div>
+                <img
+                src="${res.articles[i].urlToImage}"
+                width="100%"/>
+                <div class="title-box">
+                <a href="${res.articles[i].url}" target="_blank"> ${res.articles[i].title}</a>
+                <h5>${res.articles[i].publishedAt} | ${res.articles[i].author}</h5>
+                </div>
+                <p>
+                    ${res.articles[i].description}
+                </p>
+            </div>`
+          );
+        }
       }
     </script>
   </head>
