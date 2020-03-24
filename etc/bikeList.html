@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>JQuery 연습하고 가기!</title>
+    <!-- JQuery를 import 합니다 -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <style type="text/css">
+      div.question-box {
+        margin: 10px 0 20px 0;
+      }
+      table {
+        border: 1px solid;
+        border-collapse: collapse;
+      }
+
+      td,
+      th {
+        padding: 10px;
+        border: 1px solid;
+      }
+    </style>
+
+    <script>
+      let startNum = 0;
+      function q1() {
+        // api 참고 : https://data.seoul.go.kr/dataList/OA-15493/A/1/datasetView.do
+
+        $("#names-q1").html("");
+        $.ajax({
+          type: "GET",
+          url: `http://openapi.seoul.go.kr:8088/6d4d776b466c656533356a4b4b5872/json/bikeList/1/99`,
+          data: {},
+          success: function(res) {
+            let size = res.rentBikeStatus.list_total_count;
+
+            // 1번. for 중간조건에 && 연산자를 써서 사용해도 ok.
+            // 1번의 경우 for문 조건 : startNum + 10 && i < size
+            // 2번. size랑 startNum 값이랑 비교해서 작은값을 for문 조건에 넣어줘도 ok.
+            // 2번의 경우 for문 조건  :  let end = Math.min(size, startNum + 10);
+
+            let end = Math.min(size, startNum + 10);
+            for (i = startNum; i < end; i++) {
+              let num = i + 1; // 번호
+              let stationName = res.rentBikeStatus.row[i].stationName; // 거치대 위치
+              let rackTotCnt = res.rentBikeStatus.row[i].rackTotCnt; // 거치대 수
+              let parkingBikeTotCnt =
+                res.rentBikeStatus.row[i].parkingBikeTotCnt; // 현재 거치된 따릉이 수
+
+              $("#names-q1").append(
+                `<tr>
+                    <td>${num}</td>
+                    <td>${stationName}</td>
+                    <td>${rackTotCnt}</td>
+                    <td>${parkingBikeTotCnt}</td>
+                </tr>`
+              );
+            }
+
+            startNum += 10;
+            // 이 조건은 다시 1번부터 보여주려구..
+            if (startNum > size) {
+              startNum = 0;
+            }
+          }
+        });
+      }
+    </script>
+  </head>
+  <body>
+    <h1>JQuery+Ajax의 조합을 연습하자!</h1>
+
+    <hr />
+
+    <div class="question-box">
+      <h2>2. 서울시 OpenAPI(실시간 따릉기 현황)를 이용하기</h2>
+      <p>모든 위치의 따릉이 현황을 보여주세요</p>
+      <p>업데이트 버튼을 누를 때마다 지웠다 새로 씌여져야 합니다.</p>
+      <button onclick="q1(1,10)">업데이트</button>
+      <table>
+        <thead>
+          <tr>
+            <td>번호</td>
+            <td>거치대 위치</td>
+            <td>거치대 수</td>
+            <td>현재 거치된 따릉이 수</td>
+          </tr>
+        </thead>
+        <tbody id="names-q1">
+          <tr>
+            <!-- tr 은 하나의 table recode. 가로 한줄 -->
+            <td>1</td>
+            <td>102. 망원역 1번출구 앞</td>
+            <td>22</td>
+            <td>10</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>

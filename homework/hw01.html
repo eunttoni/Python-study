@@ -200,6 +200,8 @@
       // 핸드폰 번호 체크 정규식
       function isCelluar(asValue) {
         var regExp = /^01(?:0|1|[6-9])-(?:\d{3}|\d{4})-\d{4}$/;
+        // /^010-(?\d{4})-\d{4}$/;\
+        // 요즘은 거의 010으로 시작하고 중간에 4자리인 경우가 더 많음.
         return regExp.test(asValue); // 형식에 맞는 경우 true 리턴
       }
 

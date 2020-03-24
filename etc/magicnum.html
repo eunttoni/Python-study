@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>JQuery 연습하고 가기!</title>
+    <!-- JQuery를 import 합니다 -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+
+    <style type="text/css">
+      div.question-box {
+        margin: 10px 0 20px 0;
+      }
+    </style>
+
+    <script>
+      function q1() {
+        let num = $("#magicnum").val(); // 입력한 숫자
+        $("#meaning").html("");
+        $(".progress").show();
+        $.ajax({
+          type: "GET",
+          url: `http://numbersapi.com/${num}`,
+          data: {},
+          success: function(res) {
+            //   console.log(res);
+            $(".progress").hide();
+            $("#meaning").append(res);
+          }
+        });
+      }
+    </script>
+  </head>
+  <body>
+    <h1>JQuery+Ajax의 조합을 연습하자!</h1>
+
+    <hr />
+
+    <div class="question-box">
+      <h2>4. 랜덤 숫자 의미부여 API를 이용하기</h2>
+      <p>모든 숫자는 어떤 의미가 있습니다.</p>
+      <p>업데이트 버튼을 누를 때마다 지웠다 새로 씌여져야 합니다.</p>
+      <input type="number" id="magicnum" />
+      <button onclick="q1()">이 숫자의 의미는?</button>
+      <div class="progress" style="display: none;">
+        <div
+          class="progress-bar progress-bar-striped bg-info"
+          role="progressbar"
+          style="width: 50%"
+          aria-valuenow="50"
+          aria-valuemin="0"
+          aria-valuemax="100"
+        ></div>
+      </div>
+      <h5 id="meaning"></h5>
+    </div>
+  </body>
+</html>
