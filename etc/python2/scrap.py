@@ -5,6 +5,7 @@ r = requests.get("https://movie.naver.com/movie/sdb/rank/rmovie.nhn")
 soap = bs4.BeautifulSoup(r.text, 'html.parser')
 
 aTags = soap.select('div.tit3 a')
+# print(aTags)
 for a in aTags :
     print(a.text)
     # a.text : a태그 안에 텍스트 정보 
