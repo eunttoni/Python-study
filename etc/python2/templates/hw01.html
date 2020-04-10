@@ -131,11 +131,9 @@
 
         <div class="input-group mb-3">
           <div class="input-group-prepend">
-            <label class="input-group-text" for="inputGroupSelect01"
-              >수량</label
-            >
+            <label class="input-group-text" for="inputGroupSelect">수량</label>
           </div>
-          <select class="custom-select" id="inputGroupSelect01">
+          <select class="custom-select" id="inputGroupSelect">
             <option value="" selected>--수량을 선택하세요--</option>
             <option value="1">1</option>
             <option value="2">2</option>
@@ -176,15 +174,33 @@
         <button class="btn btn-primary" type="submit" onclick="checkForm()">
           주문하기
         </button>
+        <br />
+
+        <div class="orders">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">이름</th>
+                <th scope="col">수량</th>
+                <th scope="col">주소</th>
+                <th scope="col">전화번호</th>
+              </tr>
+            </thead>
+            <tbody id="orders-box">
+              <tr>
+                <td>Otto</td>
+                <td>@mdo</td>
+                <td>@mdo</td>
+                <td>@mdo</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script
-      src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-      integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
-      crossorigin="anonymous"
-    ></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script
       src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
       integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
@@ -197,6 +213,12 @@
     ></script>
 
     <script>
+      $(document).ready(function () {
+        // 중괄호 안에 있는 내용들을 새로고침 할 때마다 실행하라.
+        $("#orders-box").html("");
+        listing();
+      });
+
       // 핸드폰 번호 체크 정규식
       function isCelluar(asValue) {
         var regExp = /^01(?:0|1|[6-9])-(?:\d{3}|\d{4})-\d{4}$/;
@@ -206,22 +228,102 @@
       }
 
       function checkForm() {
-        if ($("#userName").val() == "") {
+        var userName = $("#userName").val();
+        var inputGroupSelect = $("#inputGroupSelect").val();
+        var address = $("#address").val();
+        var phone = $("#phone").val();
+
+        // 유효성 체크
+        if (userName == "") {
           alert("이름을 입력해주세요");
           $("#userName").focus();
-        } else if ($("#inputGroupSelect01").val() == "") {
+          return;
+        } else if (inputGroupSelect == "") {
           alert("수량을 선택해주세요");
-          $("#inputGroupSelect01").focus();
-        } else if ($("#address").val() == "") {
+          $("#inputGroupSelect").focus();
+          return;
+        } else if (address == "") {
           alert("주소를 입력해주세요");
           $("#address").focus();
-        } else if (!isCelluar($("#phone").val())) {
+          return;
+        } else if (!isCelluar(phone)) {
           alert("전화번호를 다시 입력 해주세요");
           $("#phone").val("");
           $("#phone").focus();
-        } else {
-          confirm("주문하시겠습니까?");
+          return;
         }
+
+        let data_give = {
+          userName_give: userName,
+          inputGroupSelect_give: inputGroupSelect,
+          address_give: address,
+          phone_give: phone,
+        };
+
+        // 주문정보 전송
+
+        $.ajax({
+          type: "POST", // 타입을 작성합니다.
+          url: "/order", // url을 작성합니다.
+          data: data_give, // data를 작성합니다.
+          success: function (response) {
+            if (response["result"] == "success") {
+              alert(response["msg"]);
+              $("#userName").val("");
+              $("#inputGroupSelect").val("");
+              $("#address").val("");
+              $("#phone").val("");
+              window.location.reload();
+            }
+          },
+        });
+      }
+
+      function listing() {
+        // 1. 리뷰 목록을 서버에 요청하기
+        // 2. 요청 성공 여부 확인하기
+        // 3. 요청 성공했을 때 리뷰를 올바르게 화면에 나타내기
+        $.ajax({
+          type: "GET",
+          url: "/order",
+          data: {},
+          success: function (response) {
+            if (response["result"] == "success") {
+              // 2. 성공했을 때 리뷰를 올바르게 화면에 나타내기
+              let orderLists = response["orderLists"];
+              // 3. 요청 성공했을 때 리뷰를 올바르게 화면에 나타내기
+              for (let i = 0; i < orderLists.length; i++) {
+                make_card(
+                  orderLists[i]["userName"],
+                  orderLists[i]["count"],
+                  orderLists[i]["address"],
+                  orderLists[i]["phone"]
+                );
+              }
+            } else {
+              alert("리뷰를 받아오지 못했습니다");
+            }
+          },
+        });
+      }
+
+      function make_card(name, count, address, phone) {
+        let temp_html =
+          "<tr>\
+                                <td>" +
+          name +
+          "</td>\
+                                <td>" +
+          count +
+          "</td>\
+                                <td>" +
+          address +
+          "</td>\
+                                 <td>" +
+          phone +
+          "</td>\
+                            </tr>";
+        $("#orders-box").append(temp_html);
       }
     </script>
   </body>

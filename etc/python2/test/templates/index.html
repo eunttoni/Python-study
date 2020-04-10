@@ -43,7 +43,7 @@
     />
 
     <script type="text/javascript">
-      $(document).ready(function() {
+      $(document).ready(function () {
         // 중괄호 안에 있는 내용들을 새로고침 할 때마다 실행하라.
         $("#orders-box").html("");
         listing();
@@ -74,7 +74,7 @@
         let data_give = {
           title_give: title,
           author_give: author,
-          review_give: review
+          review_give: review,
         };
 
         // 3. POST /reviews 에 저장을 요청합니다.
@@ -82,7 +82,7 @@
           type: "POST", // 타입을 작성합니다.
           url: "/reviews", // url을 작성합니다.
           data: data_give, // data를 작성합니다.
-          success: function(response) {
+          success: function (response) {
             if (response["result"] == "success") {
               alert(response["msg"]);
               $("#title").val("");
@@ -90,7 +90,7 @@
               $("#review").val("");
               window.location.reload();
             }
-          }
+          },
         });
       }
 
@@ -102,7 +102,7 @@
           type: "GET",
           url: "/reviews",
           data: {},
-          success: function(response) {
+          success: function (response) {
             if (response["result"] == "success") {
               // 2. 성공했을 때 리뷰를 올바르게 화면에 나타내기
               let reviews = response["reviews"];
@@ -117,7 +117,7 @@
             } else {
               alert("리뷰를 받아오지 못했습니다");
             }
-          }
+          },
         });
       }
 
