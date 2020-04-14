@@ -21,10 +21,12 @@
 
 메뉴
 ![menu](./img/menu.jpg)
+
 예시1
 ![ex01](./img/ex01.jpg)
+
 예시2
-![ex01](./img/ex02.jpg)
+![ex02](./img/ex02.jpg)
 
 > 개발 시작하기 전..
 
