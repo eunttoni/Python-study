@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.3.1.js"></script> -->
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.datatables.net/1.10.18/css/jquery.dataTables.min.css"
+    />
+    <script src="https://cdn.datatables.net/1.10.18/js/jquery.dataTables.min.js"></script>
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/common.css') }}"
+    />
+
+    <title>부동산</title>
+  </head>
+
+  <body>
+    <div id="wrap">
+      <!-- <div class="form-group">
+        <label for="selectSi">서울특별시</label>
+        <select
+          class="form-control"
+          id="selectSi"
+          onchange="guList(this.value)"
+        >
+          {% for row in guList %}
+          <option value="{{row['cd']}}">
+            {{row['addr_name']}}
+          </option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="selectDong"></label>
+        <select class="form-control" id="selectDong">
+          <option>구를 선택해주세요</option>
+        </select>
+      </div> -->
+
+      {% include 'menu.html' %}
+
+      <div>
+        <div class="inputTxt">
+          <input
+            type="text"
+            id="inputText"
+            placeholder="ex) 서울특별시 송파구 삼전동"
+          />
+          <input type="hidden" id="rletTypeCd" value="A01" />
+          <button type="button" id="searchBtn">
+            검색
+          </button>
+        </div>
+        <br />
+        <div id="estateList">
+          <table id="detection" class="display" style="width: 100%;">
+            <thead>
+              <tr>
+                <th>거래</th>
+                <th>종류</th>
+                <th>확인일자</th>
+                <th>매물명</th>
+                <th>공급면적</th>
+                <th>전용면적</th>
+                <th>층</th>
+                <th>매물가</th>
+              </tr>
+            </thead>
+          </table>
+        </div>
+      </div>
+    </div>
+  </body>
+
+  <script>
+    $(document).ready(function () {
+      //   guList();
+    });
+
+    function myfunction(e) {
+      let menu = $(e).attr("id");
+      if (menu == "apt") {
+        $("#rletTypeCd").val("A01");
+      } else if (menu == "opi") {
+        $("#rletTypeCd").val("A02");
+      } else {
+        $("#rletTypeCd").val("C03");
+      }
+    }
+
+    $("#searchBtn").click(function () {
+      console.log("searchBtn  click");
+      let textVal = $("#inputText").val();
+      if (textVal == "") {
+        alert("검색 지역을 입력해주세요");
+        $("#inputText").focus();
+        return;
+      } else {
+        $.ajax({
+          type: "POST",
+          url: "/searchCortar",
+          data: {
+            inputText: textVal,
+          },
+          success: function (response) {
+            console.log("법정동 코드 : " + response.cortarNo);
+            realasset(response.cortarNo);
+          },
+        });
+      }
+    });
+
+    function realasset(cortarNo) {
+      console.log("realasset 함수 실행!   cortarNo :", cortarNo);
+      $("#detection").dataTable({
+        destroy: true, // row 초기화
+        language: {
+          emptyTable: "데이터가 없어요.",
+          lengthMenu: "페이지당 _MENU_ 개씩 보기",
+          info: "현재 _START_ - _END_ / _TOTAL_건",
+          infoEmpty: "데이터 없음",
+          infoFiltered: "( _MAX_건의 데이터에서 필터링됨 )",
+          search: "검색: ",
+          zeroRecords: "일치하는 데이터가 없어요.",
+          loadingRecords: "로딩중...",
+          processing: "잠시만 기다려 주세요...",
+          paginate: {
+            next: "다음",
+            previous: "이전",
+          },
+        },
+        ajax: {
+          url: "/realasset",
+          type: "POST",
+          dataType: "json",
+          data: function (d) {
+            d.code = cortarNo;
+            d.rletTypeCd = $("#rletTypeCd").val();
+          },
+          dataSrc: "data",
+          // contentType: "application/text",   // 주석 풀변 python에서 request.form['code'] 못 가져옴...
+        },
+        columns: [
+          { data: "거래" },
+          { data: "종류" },
+          { data: "확인일자" },
+          { data: "매물명" },
+          { data: "공급면적" },
+          { data: "전용면적" },
+          { data: "층" },
+          { data: "매물가" },
+        ],
+        // columnDefs: [
+        //   {
+        //     targets: 2,
+        //     width: "16%",
+        //     render: $.fn.dataTable.render.moment("Do MM YYYY"),
+        //   },
+        // ],
+      });
+    }
+
+    function guList(code) {
+      $.ajax({
+        type: "POST",
+        url: "/dongList",
+        data: {
+          cd: code,
+        },
+        success: function (response) {
+          let size = response.dongList.length;
+          $("#selectDong").html("");
+          for (i = 0; i < size; i++) {
+            let dongList = response.dongList[i];
+            $("#selectDong").append(
+              `<option value="${dongList.cd}">${dongList.addr_name}</option>`
+            );
+          }
+        },
+      });
+    }
+  </script>
+</html>

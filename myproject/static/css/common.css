@@ -1,0 +1,108 @@
+.form-group {
+  max-width: 200px;
+}
+#wrap {
+  position: relative;
+  width: auto;
+  margin: 0 auto;
+  padding-top: 166px;
+  word-break: keep-all;
+}
+#header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  background-color: #000;
+  z-index: 200;
+}
+#header .headerContainer {
+  position: relative;
+  height: 166px;
+}
+#gnb {
+  position: relative;
+  width: 100%;
+  text-align: center;
+  font-size: 0;
+}
+#gnb .gnbInner {
+  position: relative;
+  margin: 0 15px;
+}
+.gnbInner .gnbMenuList {
+  display: inline-block;
+  margin: 109px auto 0;
+}
+.gnbInner .gnbMenuList:after {
+  display: block;
+  content: "";
+  clear: both;
+}
+.gnbTop h1 {
+  position: absolute;
+  top: 36px;
+  left: 50%;
+  z-index: 10;
+  width: 248px;
+  margin-left: -124px;
+}
+
+.gnbTop h1 .h1Logo {
+  display: inline-block;
+  width: 137px;
+  margin-right: 8px;
+  vertical-align: middle;
+  font-size: 30px;
+  color: #fc008c;
+}
+
+.gnbMenuList > li {
+  position: relative;
+  float: left;
+  padding: 0 45px;
+  height: 57px;
+}
+.gnbMenuList > li a {
+  display: block;
+  padding: 12px 0 20px;
+  font-size: 16px;
+  text-align: left;
+  color: #fff;
+}
+
+.gnbMenuList > li > a:hover {
+  color: #fc008c;
+}
+
+.inputTxt {
+  margin-top: 45px;
+  font-size: 0;
+}
+
+.inputTxt input {
+  display: inline-block;
+  width: 200px;
+  max-width: 100%;
+  height: 30x;
+  padding: 0 30px 0 30px;
+  border: none;
+  background-color: rgb(227, 231, 233);
+  font-size: 10px;
+  line-height: 30px;
+  vertical-align: top;
+}
+
+.inputTxt button {
+  display: inline-block;
+  height: 30px;
+  padding: 0 30px 0 30px;
+  border: none;
+  background-color: #000;
+  font-size: 20px;
+  line-height: 30px;
+  color: #fff;
+  vertical-align: top;
+  cursor: pointer;
+}
